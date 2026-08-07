@@ -1,4 +1,4 @@
 torch==2.11.0+cu128
 torchvision
 ultralytics==8.4.115
-pycocotools
+pycocotools==2.0.11
