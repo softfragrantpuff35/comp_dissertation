@@ -1,0 +1,92 @@
+{
+  "run_name": "yolo26n_seed1",
+  "timestamp": "2026-08-08T00:25:45",
+  "model": "yolo26n",
+  "tag": "",
+  "seed": 1,
+  "smoke": false,
+  "config": {
+    "data": "VisDrone.yaml",
+    "imgsz": 640,
+    "batch": 12,
+    "epochs": 60,
+    "patience": 15,
+    "max_det": 1000,
+    "amp": true,
+    "split": "val",
+    "workers": 8,
+    "exist_ok": false
+  },
+  "git_commit": "cb9f6b8-dirty",
+  "environment": {
+    "python": "3.13.0",
+    "torch": "2.11.0+cu128",
+    "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU"
+  },
+  "train_seconds": 5213.11638879776,
+  "epochs_completed": null,
+  "params": 2376786,
+  "ultralytics_metrics": {
+    "precision": 0.4107865498504587,
+    "recall": 0.3188227052337278,
+    "mAP50": 0.302039650068065,
+    "mAP50_95": 0.16324102191902523
+  },
+  "coco": {
+    "AP": 0.16597812517096347,
+    "AP50": 0.30492791085631615,
+    "AP75": 0.15615672951885093,
+    "AP_small": 0.08278938509063272,
+    "AP_medium": 0.25188218975509197,
+    "AP_large": 0.4609044088478671,
+    "AR_1": 0.08160645832317559,
+    "AR_10": 0.2287533018034168,
+    "AR_1000": 0.36177039152523854,
+    "AR_small": 0.2602794628376961,
+    "AR_medium": 0.504165547498503,
+    "AR_large": 0.6817895010236035
+  },
+  "density": {
+    "low": {
+      "n_images": 184,
+      "AP": 0.20712266834210774,
+      "AP50": 0.358026149242543,
+      "AP_small": 0.11013019679494482
+    },
+    "medium": {
+      "n_images": 189,
+      "AP": 0.18437724192029706,
+      "AP50": 0.3224688168394193,
+      "AP_small": 0.09793308705016834
+    },
+    "high": {
+      "n_images": 175,
+      "AP": 0.1463881486104926,
+      "AP50": 0.27870049719361156,
+      "AP_small": 0.07198240064113678
+    }
+  },
+  "per_class_AP": {
+    "pedestrian": 0.13902793957048054,
+    "people": 0.0869678299265302,
+    "bicycle": 0.025637489830979313,
+    "car": 0.4637917578173737,
+    "van": 0.22623812972796514,
+    "truck": 0.17255048237290216,
+    "tricycle": 0.09479849168461431,
+    "awning-tricycle": 0.059960499985690544,
+    "bus": 0.2588235900122623,
+    "motor": 0.13198504078083648
+  },
+  "latency": {
+    "latency_ms_mean": 13.045434499999828,
+    "latency_ms_std": 1.25913081553617,
+    "latency_ms_p50": 12.990250001166714,
+    "latency_ms_p95": 14.685620000454946,
+    "fps": 76.65517005202189,
+    "precision": "fp32",
+    "batch_size": 1,
+    "warmup_iters": 50,
+    "timed_iters": 200
+  }
+}

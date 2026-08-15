@@ -46,6 +46,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from coco_eval import DATASET_ROOT, VISDRONE_NAMES, build_gt, evaluate, remap_predictions  # noqa: E402
 from density_analysis import evaluate_bins, load_counts, make_bins  # noqa: E402
+from weight_remap import load_pretrained_shifted, verify_transfer  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Frozen experimental configuration — plan §6.
@@ -54,7 +55,7 @@ from density_analysis import evaluate_bins, load_counts, make_bins  # noqa: E402
 CONFIG = {
     "data": "VisDrone.yaml",
     "imgsz": 640,
-    "batch": 16,
+    "batch": 12,   # reduced from 16: 8GB VRAM peaked at 8.49G on dense batches
     "epochs": 60,
     "patience": 15,
     "max_det": 1000,  # plan §12 item 1 — measured max is 317 objects/image
@@ -68,7 +69,6 @@ SMOKE_OVERRIDES = {"epochs": 3, "batch": 8, "fraction": 0.05}
 
 RESULTS_DIR = Path("results")
 RUNS_DIR = Path("runs/detect")
-PROJECT = str(Path("runs/detect").resolve())   # absolute, bypasses runs_dir resolution
 
 
 def set_seeds(seed: int) -> None:
@@ -160,9 +160,17 @@ def main() -> None:
     ap.add_argument("--tag", default="", help="suffix for the run name, e.g. cbam")
     ap.add_argument("--smoke", action="store_true", help="tiny run to validate the pipeline")
     ap.add_argument("--eval-only", action="store_true", help="skip training, evaluate an existing run")
+    ap.add_argument("--insert-at", type=int, default=11,
+                    help="index at which a module was inserted, for weight remapping")
     args = ap.parse_args()
 
     from ultralytics import YOLO
+
+    # Custom attention modules must be resolvable before any YAML naming them
+    # is parsed. Harmless for the unmodified baselines.
+    from attention import register as register_attention
+
+    register_attention()
 
     cfg = dict(CONFIG)
     if args.smoke:
@@ -188,6 +196,7 @@ def main() -> None:
         )
 
     set_seeds(args.seed)
+    pretrained_summary = None
 
     # ---- train ------------------------------------------------------------
     if args.eval_only:
@@ -197,8 +206,64 @@ def main() -> None:
         model = YOLO(str(best))
         train_seconds = None
     else:
-        init = args.weights or (args.model if args.model.endswith(".pt") else f"{args.model}.pt")
-        model = YOLO(init)
+        # When --model names a YAML the model MUST be built from that YAML;
+        # --weights then supplies initial weights on top of it via partial
+        # loading (plan §7.2). Loading the .pt directly would silently discard
+        # the architecture change and produce a baseline run wearing the
+        # modified configuration's name.
+        if args.model.endswith((".yaml", ".yml")):
+            model = YOLO(args.model)
+            if args.weights:
+                # Ultralytics matches pretrained weights by parameter name, and
+                # those names encode layer position. Inserting a module renames
+                # every later layer, so a plain load() silently drops the whole
+                # neck and detection head (measured: 240/711 transferred, head
+                # 0/240). Remap the checkpoint's indices first.
+                # P2 is not a single-module insertion: it restructures the head
+                # (four detection scales instead of three, different channel
+                # widths downstream). Its backbone indices align with the
+                # checkpoint's, so no shift applies; the layers that do differ
+                # genuinely have no pretrained counterpart.
+                n_shift = 0 if "p2" in Path(args.model).stem else 1
+                summary = load_pretrained_shifted(
+                    model, args.weights, insert_at=args.insert_at, n_inserted=n_shift
+                )
+                # P2 restructures the head rather than inserting a module, so
+                # tensors legitimately differ in shape as well as being absent.
+                # The remapping check assumes the insertion case and does not
+                # apply; the transfer count is asserted below instead.
+                if n_shift:
+                    verify_transfer(summary, expected_new_tensors=summary["no_counterpart"])
+                if summary["transferred"] < 350:
+                    sys.exit(
+                        f"[ERROR] only {summary['transferred']} tensors transferred; "
+                        "expected ~708. Do not train on this model."
+                    )
+                pretrained_summary = summary
+
+                # engine/model.py:822 rebuilds the network from YAML at the
+                # start of train(), passing weights only when self.ckpt is set.
+                # A YAML-built model has no ckpt, so everything loaded above
+                # would be discarded and training would start from scratch --
+                # silently, and indistinguishably from the module being
+                # ineffective. Serialising to a checkpoint makes the modified
+                # model enter training through exactly the same path as the
+                # unmodified baselines.
+                init_ckpt = Path("runs/_init") / f"{run_name}.pt"
+                init_ckpt.parent.mkdir(parents=True, exist_ok=True)
+                net = model.model
+                net.args = {}
+                torch.save(
+                    {"model": net.half(), "date": "", "version": "",
+                     "train_args": {}, "epoch": -1, "best_fitness": None},
+                    init_ckpt,
+                )
+                model = YOLO(str(init_ckpt))
+                if not model.ckpt:
+                    sys.exit("[ERROR] checkpoint round-trip failed; weights would be lost in train()")
+                print(f"[weights] serialised initialised model to {init_ckpt}")
+        else:
+            model = YOLO(args.weights or f"{args.model}.pt")
         t0 = time.time()
         model.train(
             data=cfg["data"],
@@ -216,6 +281,9 @@ def main() -> None:
             **({"fraction": cfg["fraction"]} if "fraction" in cfg else {}),
         )
         train_seconds = time.time() - t0
+        # train() and val() resolve `project` differently from one another and
+        # from the global runs_dir setting; read the path actually used rather
+        # than reconstructing it.
         run_dir = Path(model.trainer.save_dir)
         model = YOLO(str(run_dir / "weights" / "best.pt"))
 
@@ -230,8 +298,6 @@ def main() -> None:
         name=f"{run_name}_val",
         exist_ok=True,
     )
-# val() resolves `project` differently from train(); read the actual path
-    # it used rather than reconstructing it.
     pred_json = Path(metrics.save_dir) / "predictions.json"
     if not pred_json.exists():
         sys.exit(f"[ERROR] predictions.json not produced at {pred_json}")
@@ -281,6 +347,7 @@ def main() -> None:
         "train_seconds": train_seconds,
         "epochs_completed": getattr(getattr(model, "trainer", None), "epoch", None),
         "params": n_params,
+        "pretrained_transfer": pretrained_summary,
         "ultralytics_metrics": {
             "precision": float(metrics.box.mp),
             "recall": float(metrics.box.mr),

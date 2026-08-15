@@ -1,0 +1,98 @@
+{
+  "run_name": "yolo26-ca_ca_seed2",
+  "timestamp": "2026-08-09T12:25:18",
+  "model": "configs\\yolo26-ca.yaml",
+  "tag": "ca",
+  "seed": 2,
+  "smoke": false,
+  "config": {
+    "data": "VisDrone.yaml",
+    "imgsz": 640,
+    "batch": 12,
+    "epochs": 60,
+    "patience": 15,
+    "max_det": 1000,
+    "amp": true,
+    "split": "val",
+    "workers": 8,
+    "exist_ok": false
+  },
+  "git_commit": "cb9f6b8-dirty",
+  "environment": {
+    "python": "3.13.0",
+    "torch": "2.11.0+cu128",
+    "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU"
+  },
+  "train_seconds": 5197.246900558472,
+  "epochs_completed": null,
+  "params": 2383466,
+  "pretrained_transfer": {
+    "total": 719,
+    "transferred": 708,
+    "shape_mismatch": 0,
+    "no_counterpart": 11
+  },
+  "ultralytics_metrics": {
+    "precision": 0.4156005936209225,
+    "recall": 0.3147318681392283,
+    "mAP50": 0.299791406119011,
+    "mAP50_95": 0.16194934497367725
+  },
+  "coco": {
+    "AP": 0.16476128663138134,
+    "AP50": 0.3028998546448886,
+    "AP75": 0.15688067257716343,
+    "AP_small": 0.08149392824965997,
+    "AP_medium": 0.252366076104883,
+    "AP_large": 0.4492264487084572,
+    "AR_1": 0.08077366598321356,
+    "AR_10": 0.22871065978626093,
+    "AR_1000": 0.3612293693726785,
+    "AR_small": 0.2600337573227921,
+    "AR_medium": 0.5036405878488872,
+    "AR_large": 0.6806418647910593
+  },
+  "density": {
+    "low": {
+      "n_images": 184,
+      "AP": 0.2015958765567498,
+      "AP50": 0.354907248591858,
+      "AP_small": 0.10990843743704268
+    },
+    "medium": {
+      "n_images": 189,
+      "AP": 0.18368302905300243,
+      "AP50": 0.323272743192171,
+      "AP_small": 0.0927498738092852
+    },
+    "high": {
+      "n_images": 175,
+      "AP": 0.14672993825431013,
+      "AP50": 0.2783231165360705,
+      "AP_small": 0.0715193765048466
+    }
+  },
+  "per_class_AP": {
+    "pedestrian": 0.13802862708885905,
+    "people": 0.0882501635741445,
+    "bicycle": 0.025961182526085223,
+    "car": 0.46129123133463745,
+    "van": 0.2212575579765137,
+    "truck": 0.17243467917911998,
+    "tricycle": 0.09770868225578865,
+    "awning-tricycle": 0.0597929463370559,
+    "bus": 0.25177196201015384,
+    "motor": 0.13111583403145521
+  },
+  "latency": {
+    "latency_ms_mean": 14.247859000606695,
+    "latency_ms_std": 1.4715439541850959,
+    "latency_ms_p50": 14.322450006147847,
+    "latency_ms_p95": 16.07656499982113,
+    "fps": 70.18598372972518,
+    "precision": "fp32",
+    "batch_size": 1,
+    "warmup_iters": 50,
+    "timed_iters": 200
+  }
+}

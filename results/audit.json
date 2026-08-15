@@ -1,0 +1,167 @@
+{
+  "convergence": {
+    "yolo26-ca_ca_seed0": {
+      "epochs": 60,
+      "best_epoch": 46,
+      "best_map": 0.16403,
+      "final_map": 0.16277,
+      "slope_last20": 5.9135338345864376e-05,
+      "slope_last10": 0.00019260606060606065
+    },
+    "yolo26-ca_ca_seed1": {
+      "epochs": 60,
+      "best_epoch": 46,
+      "best_map": 0.16303,
+      "final_map": 0.16145,
+      "slope_last20": 5.320300751879652e-05,
+      "slope_last10": 0.00017230303030303423
+    },
+    "yolo26-ca_ca_seed2": {
+      "epochs": 60,
+      "best_epoch": 49,
+      "best_map": 0.16185,
+      "final_map": 0.15973,
+      "slope_last20": 2.857142857142542e-06,
+      "slope_last10": 0.00025751515151514694
+    },
+    "yolo26-cbam_cbam_seed0": {
+      "epochs": 60,
+      "best_epoch": 56,
+      "best_map": 0.16394,
+      "final_map": 0.16325,
+      "slope_last20": 0.00016165413533834687,
+      "slope_last10": 0.0002403636363636373
+    },
+    "yolo26-cbam_cbam_seed1": {
+      "epochs": 60,
+      "best_epoch": 47,
+      "best_map": 0.16249,
+      "final_map": 0.16084,
+      "slope_last20": -1.6714285714285506e-05,
+      "slope_last10": 0.00029824242424242656
+    },
+    "yolo26-cbam_cbam_seed2": {
+      "epochs": 60,
+      "best_epoch": 57,
+      "best_map": 0.1615,
+      "final_map": 0.16102,
+      "slope_last20": 0.0001474661654135323,
+      "slope_last10": 0.00020381818181818118
+    },
+    "yolo26-ema_ema_seed0": {
+      "epochs": 60,
+      "best_epoch": 50,
+      "best_map": 0.16214,
+      "final_map": 0.16091,
+      "slope_last20": 0.00012718796992481263,
+      "slope_last10": 0.00017290909090909588
+    },
+    "yolo26-ema_ema_seed1": {
+      "epochs": 60,
+      "best_epoch": 50,
+      "best_map": 0.16502,
+      "final_map": 0.16421,
+      "slope_last20": 8.401503759398533e-05,
+      "slope_last10": 0.00021690909090909267
+    },
+    "yolo26-ema_ema_seed2": {
+      "epochs": 60,
+      "best_epoch": 50,
+      "best_map": 0.16371,
+      "final_map": 0.16348,
+      "slope_last20": 6.642105263157947e-05,
+      "slope_last10": 0.0002580606060606069
+    },
+    "yolov10-ca_ca_seed0": {
+      "epochs": 60,
+      "best_epoch": 59,
+      "best_map": 0.16997,
+      "final_map": 0.16981,
+      "slope_last20": 7.996240601503761e-05,
+      "slope_last10": 0.0004293333333333427
+    },
+    "yolov10-ca_ca_seed1": {
+      "epochs": 60,
+      "best_epoch": 58,
+      "best_map": 0.16934,
+      "final_map": 0.16915,
+      "slope_last20": 0.0002724586466165396,
+      "slope_last10": 0.0003487878787878781
+    },
+    "yolov10-ca_ca_seed2": {
+      "epochs": 60,
+      "best_epoch": 50,
+      "best_map": 0.16899,
+      "final_map": 0.16848,
+      "slope_last20": 8.593233082706614e-05,
+      "slope_last10": 0.00039666666666666843
+    },
+    "yolov10-cbam_cbam_seed0": {
+      "epochs": 60,
+      "best_epoch": 60,
+      "best_map": 0.17094,
+      "final_map": 0.17094,
+      "slope_last20": 0.00023087218045112664,
+      "slope_last10": 0.00045678787878787965
+    },
+    "yolov10-cbam_cbam_seed1": {
+      "epochs": 60,
+      "best_epoch": 59,
+      "best_map": 0.16957,
+      "final_map": 0.16939,
+      "slope_last20": 0.00015429323308270674,
+      "slope_last10": 0.0003928484848484881
+    },
+    "yolov10-cbam_cbam_seed2": {
+      "epochs": 60,
+      "best_epoch": 47,
+      "best_map": 0.16804,
+      "final_map": 0.16804,
+      "slope_last20": 8.761654135338249e-05,
+      "slope_last10": 0.00026169696969697263
+    },
+    "yolov10-ema_ema_seed0": {
+      "epochs": 60,
+      "best_epoch": 59,
+      "best_map": 0.16834,
+      "final_map": 0.16823,
+      "slope_last20": 0.00011306766917293006,
+      "slope_last10": 0.0005035757575757596
+    },
+    "yolov10-ema_ema_seed1": {
+      "epochs": 60,
+      "best_epoch": 59,
+      "best_map": 0.1687,
+      "final_map": 0.16814,
+      "slope_last20": 0.00020054887218045047,
+      "slope_last10": 0.0003189696969696981
+    },
+    "yolov10-ema_ema_seed2": {
+      "epochs": 60,
+      "best_epoch": 47,
+      "best_map": 0.16751,
+      "final_map": 0.16731,
+      "slope_last20": 0.00012728571428571278,
+      "slope_last10": 0.00021224242424242729
+    }
+  },
+  "annotations": {
+    "sampled": 20,
+    "matched": 20,
+    "problems": [],
+    "categories_seen": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "worst_coord_error": 5.000000000143778e-07
+  }
+}
